@@ -3,65 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Academic Research Nexus | Sovereign Intelligence</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Fira+Code&display=swap" rel="stylesheet">
-    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/2592/2592317.png">
-    <link rel="stylesheet" href="index.css">
+    <title>Nexus Intelligence v21.0</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Marked.js for professional markdown -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
-<body class="zeta-realm">
-    <header class="dashboard-header">
-        <div class="brand">
-            <h1 style="margin:0; font-size: 1.5rem; color: var(--primary); letter-spacing: 2px;">ZETA ELITE</h1>
-            <span style="font-size: 0.8rem; opacity: 0.6; letter-spacing: 1px;">SOVEREIGN NEURAL INTERFACE</span>
+<body>
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+        <button class="new-chat-btn" id="btn-new-chat">
+            <span>+</span> New session
+        </button>
+        <div class="sidebar-nav" id="recent-sessions">
+            <div class="budget-card">
+                <span class="label">SOVEREIGN BALANCE</span>
+                <span class="value" id="budget-value">$1000.00</span>
+                <div class="status-indicator">UNLIMITED ACTIVE</div>
+            </div>
+            <div class="sidebar-item active">Current Research</div>
+            <div class="sidebar-item" id="local-node-status">
+                <span class="status-dot"></span>
+                Local Node: <span id="node-health">DETECTING...</span>
+            </div>
+            <!-- Dynamic items will be added here -->
         </div>
-        <div class="status-badge">System Online</div>
-    </header>
+        <div class="sidebar-footer">
+            <div class="sidebar-item" id="btn-settings"><span>⚙️</span> Settings</div>
+            <div class="sidebar-item" id="btn-root"><span>👤</span> Root Access</div>
+        </div>
+    </aside>
 
-    <main class="grid-container">
-        <section class="glass-panel">
-            <h2 style="color: var(--primary); margin-top: 0;">Operational Status</h2>
-            <p style="opacity: 0.8;">Welcome back, Alpha. Neural pathways established.</p>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 2rem;">
-                <div>
-                    <small style="text-transform: uppercase; font-size: 0.7rem; opacity: 0.5;">AI Lure Success</small>
-                    <div style="font-size: 1.8rem; font-weight: 700; color: var(--primary);">84.2%</div>
+    <!-- Modals -->
+    <div id="modal-settings" class="modal">
+        <canvas id="matrix-settings" style="position:absolute; top:0; left:0; width:100%; height:100%; z-index:-1; opacity:0.1;"></canvas>
+        <div class="modal-content glass-panel">
+            <h3>System Settings</h3>
+            <div class="setting-group">
+                <label for="api-key-input">API Key Rotation</label>
+                <input type="password" id="api-key-input" name="api_key" placeholder="sk-..." value="••••••••••••••••">
+            </div>
+            <button class="action-btn" aria-label="Save Settings" onclick="document.getElementById('modal-settings').style.display='none'">Save Configuration</button>
+            <button class="action-btn" id="btn-clear-history" style="background: var(--danger); margin-top: 10px;">Clear All History</button>
+        </div>
+    </div>
+
+    <div id="modal-root" class="modal">
+        <canvas id="matrix-root" style="position:absolute; top:0; left:0; width:100%; height:100%; z-index:-1; opacity:0.2;"></canvas>
+        <div class="modal-content glass-panel terminal">
+            <h3 id="terminal-label">Root Identity Terminal</h3>
+            <div id="terminal-output" class="terminal-body" role="log" aria-labelledby="terminal-label">> UNLOCK_NEXUS_CORE...<br>> IDENTITY_VERIFIED_AS_SOVEREIGN<br>> SYSTEM_STABLE</div>
+            <label for="terminal-input" style="display:none;">Terminal Command</label>
+            <input type="text" id="terminal-input" name="terminal_cmd" placeholder="Enter root command..." class="terminal-input" autocomplete="off">
+            <button class="action-btn" aria-label="Close Terminal" onclick="document.getElementById('modal-root').style.display='none'">Exit Terminal</button>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+        <header>
+            <div class="header-left">
+                <button id="btn-menu" class="action-btn" style="margin-right: 16px;">☰</button>
+                <div class="logo">✦ SOVEREIGN RESEARCH NEXUS <small>v21.5</small></div>
+            </div>
+            
+            <div class="status-bar">
+                <span id="bridge-status"><span class="pulse"></span> NEURAL_BRIDGE: ACTIVE</span>
+                <span id="latency-telemetry">LATENCY: 0ms</span>
+            </div>
+
+            <div class="controls-hub">
+                <select id="intensity-toggle" class="glass-select">
+                    <option value="low">Intensity: Low</option>
+                    <option value="medium">Intensity: Medium</option>
+                    <option value="high" selected>Intensity: High</option>
+                </select>
+                <select id="model-toggle" class="glass-select">
+                    <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
+                    <option value="llama-3.1">Llama 3.1 Sovereign</option>
+                    <option value="deepseek">DeepSeek Reasoner</option>
+                </select>
+                <select id="persona-toggle" class="glass-select">
+                    <option value="auditor">Auditor</option>
+                    <option value="analyst">Analyst</option>
+                    <option value="researcher">Researcher</option>
+                    <option value="nexus_oracle" selected>Nexus Oracle</option>
+                </select>
+            </div>
+        </header>
+
+        <div class="chat-window" id="chat-window">
+            <div class="message-container" id="chat-messages" role="log" aria-live="polite">
+                <div class="msg bot">
+                    <div class="avatar">✦</div>
+                    <div class="msg-content">
+                        <p>How can I help with your research today?</p>
+                    </div>
                 </div>
-                <div>
-                    <small style="text-transform: uppercase; font-size: 0.7rem; opacity: 0.5;">Data Captured</small>
-                    <div style="font-size: 1.8rem; font-weight: 700; color: var(--secondary);">1,248</div>
-                </div>
             </div>
-        </section>
+        </div>
 
-        <section class="glass-panel">
-            <h2 style="color: var(--secondary); margin-top: 0;">Security Audit</h2>
-            <p style="opacity: 0.8;">Calibrate vectors for autonomous deployment.</p>
-            <div style="display: flex; flex-direction: column; gap: 1rem; margin-top: 1.5rem;">
-                <button id="cloakBtn" style="width: 100%;">CLOAK PROTOCOL: ACTIVE</button>
-                <button id="unleashBtn" style="width: 100%; background: transparent; border: 1px solid var(--primary); color: var(--primary);">UNLEASH AGENT</button>
-            </div>
-        </section>
+        <div class="input-area">
+            <form class="input-container" id="chat-form">
+                <label for="image-upload" class="action-btn" aria-label="Upload File">📎</label>
+                <input type="file" id="image-upload" name="file_upload" accept="*" style="display: none;">
+                
+                <label for="chat-input" style="display:none;">Message Nexus</label>
+                <input type="text" id="chat-input" name="prompt" placeholder="Enter a prompt here" autocomplete="off">
+                
+                <button class="action-btn" id="btn-send" type="submit" aria-label="Send Message">➤</button>
+            </form>
+        </div>
 
-        <section class="glass-panel" style="grid-column: 1 / -1; display: flex; flex-direction: column; gap: 1rem;">
-            <h2 style="color: var(--primary); margin: 0; font-size: 1.1rem;">Neural Command Center</h2>
-            <div id="chatContainer" style="height: 300px; overflow-y: auto; background: rgba(0,0,0,0.3); border-radius: 12px; padding: 1rem; border: 1px solid var(--glass-border); font-family: 'Fira Code', monospace; font-size: 0.9rem;">
-                <div style="color: var(--primary); margin-bottom: 1rem;">[SYSTEM] Bot Alpha-7 ready for commands. Type below to begin research.</div>
-            </div>
-            <div style="display: flex; gap: 1rem;">
-                <input type="text" id="userInput" placeholder="Enter research command or prompt..." style="flex: 1; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); border-radius: 8px; padding: 0.8rem; color: #fff; outline: none;">
-                <button id="sendBtn" style="padding: 0.5rem 1.5rem;">Send</button>
-            </div>
-        </section>
-
-        <section class="glass-panel" style="grid-column: 1 / -1;">
-            <h2 style="font-size: 1.1rem; margin-top: 0; display: flex; align-items: center; gap: 0.5rem;">
-                <span style="width: 10px; height: 10px; background: #00ff00; border-radius: 50%; display: inline-block;"></span>
-                Neural Pulse Log
-            </h2>
-            <div class="log-container" id="logOutput">
-                <div style="margin-bottom: 0.5rem;">[21:14:02] System handshake established. <span style="color: var(--primary);">SUCCESS</span></div>
-            </div>
-        </section>
+        <!-- REASONING PANE (HIDDEN BY DEFAULT) -->
+        <div id="neural-thought" style="display:none;"></div>
     </main>
 
     <script src="app.js"></script>
