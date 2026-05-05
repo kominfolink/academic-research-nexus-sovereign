@@ -1,4 +1,4 @@
-// ACADEMIC_NEXUS_SERVER v21.16 [STREAMING_CORE]
+// ACADEMIC_NEXUS_SERVER v21.17 [ULTIMATE_RESILIENCE]
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -22,32 +22,40 @@ app.get('/health', (req, res) => res.json({ status: 'UP', infrastructure: 'SOVER
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 
 app.post('/api/process-v1', async (req, res) => {
-    const { messages, model, intensity, persona, stream } = req.body;
-    console.log(`[AI_STREAM] Req: ${persona} | Model: ${model}`);
-
+    const { messages, model, intensity, persona } = req.body;
     const systemPrompt = `You are ${persona || 'Nexus Oracle'}. Intensity: ${intensity}. Provide elite insights.`;
     const fullMessages = [{ role: 'system', content: systemPrompt }, ...messages];
 
-    // Set headers for SSE (Server-Sent Events)
     res.setHeader('Content-Type', 'text/event-stream');
     res.setHeader('Cache-Control', 'no-cache');
-    res.setHeader('Connection', 'keep-alive');
 
     try {
-        const aiResponse = await fetch(`${process.env.LITELLM_BASE_URL}/chat/completions`, {
+        console.log('[AI_REQ] Attempting LiteLLM...');
+        let aiResponse = await fetch(`${process.env.LITELLM_BASE_URL}/chat/completions`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${process.env.LITELLM_API_KEY}`
             },
-            body: JSON.stringify({
-                model: model || 'gpt-4o',
-                messages: fullMessages,
-                stream: true 
-            })
+            body: JSON.stringify({ model: model || 'gpt-4o', messages: fullMessages, stream: true }),
+            signal: AbortSignal.timeout(8000)
         });
 
-        if (!aiResponse.ok) throw new Error('LiteLLM Stream Failed');
+        // Failover to OpenRouter if LiteLLM fails
+        if (!aiResponse.ok) {
+            console.log('[AI_REQ] LiteLLM failed, trying OpenRouter...');
+            aiResponse = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`
+                },
+                body: JSON.stringify({ model: 'google/gemini-2.0-flash-001', messages: fullMessages, stream: true }),
+                signal: AbortSignal.timeout(8000)
+            });
+        }
+
+        if (!aiResponse.ok) throw new Error('ALL_BRIDGES_FAILED');
 
         const reader = aiResponse.body.getReader();
         const decoder = new TextDecoder();
@@ -55,25 +63,16 @@ app.post('/api/process-v1', async (req, res) => {
         while (true) {
             const { done, value } = await reader.read();
             if (done) break;
-            const chunk = decoder.decode(value);
-            res.write(chunk); // Forward the chunk directly to the frontend
+            res.write(decoder.decode(value));
         }
 
     } catch (error) {
-        console.error('[STREAM_ERR]', error.message);
-        // Fallback to static response if stream fails
-        res.write(`data: ${JSON.stringify({ choices: [{ delta: { content: "[ERROR] Neural Bridge Interrupted. Re-verify API keys." } }] })}\n\n`);
+        console.error('[BRIDGE_ERR]', error.message);
+        res.write(`data: ${JSON.stringify({ choices: [{ delta: { content: "[ERROR] Neural Bridge Interrupted. Check .env in Codespace." } }] })}\n\n`);
     } finally {
         res.write('data: [DONE]\n\n');
         res.end();
     }
 });
 
-const upload = multer({ storage: multer.memoryStorage() });
-app.post('/api/analyze', upload.single('file'), (req, res) => {
-    res.json({ status: 'PROCESSING', detail: 'Neural bridge operational.' });
-});
-
-app.listen(PORT, '0.0.0.0', () => {
-    console.log(`[SYS] Nexus Core v21.16 STREAMING ACTIVE on port ${PORT}`);
-});
+app.listen(PORT, '0.0.0.0', () => console.log(`[SYS] Core v21.17 ACTIVE on port ${PORT}`));
