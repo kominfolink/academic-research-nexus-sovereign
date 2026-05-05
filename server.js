@@ -1,4 +1,4 @@
-// ACADEMIC_NEXUS_SERVER v21.19 [SOVEREIGN_CLEAN]
+// ACADEMIC_NEXUS_SERVER v21.20 [DIAGNOSTIC_RESILIENCE]
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -18,18 +18,19 @@ app.use(express.json());
 app.use(cors());
 app.use(express.static(__dirname));
 
-app.get('/health', (req, res) => res.json({ status: 'UP', infrastructure: 'CLEAN' }));
+app.get('/health', (req, res) => res.json({ status: 'UP', infrastructure: 'DIAGNOSTIC' }));
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 
 app.post('/api/process-v1', async (req, res) => {
     const { messages, model, intensity, persona } = req.body;
-    const systemPrompt = `You are ${persona || 'Nexus Oracle'}. Intensity: ${intensity}. Provide elite insights.`;
+    const systemPrompt = `You are ${persona || 'Nexus Oracle'}. Intensity: ${intensity}.`;
     const fullMessages = [{ role: 'system', content: systemPrompt }, ...messages];
 
     res.setHeader('Content-Type', 'text/event-stream');
     res.setHeader('Cache-Control', 'no-cache');
 
     try {
+        console.log('[AI_REQ] Connecting to LiteLLM Bridge...');
         let aiResponse = await fetch(`${process.env.LITELLM_BASE_URL}/chat/completions`, {
             method: 'POST',
             headers: {
@@ -41,6 +42,10 @@ app.post('/api/process-v1', async (req, res) => {
         });
 
         if (!aiResponse.ok) {
+            const errText = await aiResponse.text();
+            console.error('[BRIDGE_FAIL] LiteLLM rejected:', aiResponse.status, errText);
+            
+            console.log('[AI_REQ] Trying OpenRouter Failover...');
             aiResponse = await fetch('https://openrouter.ai/api/v1/chat/completions', {
                 method: 'POST',
                 headers: {
@@ -52,7 +57,10 @@ app.post('/api/process-v1', async (req, res) => {
             });
         }
 
-        if (!aiResponse.ok) throw new Error('TOTAL_NEURAL_COLLAPSE');
+        if (!aiResponse.ok) {
+            const errText = await aiResponse.text();
+            throw new Error(`ALL_API_BRIDGES_FAILED (${aiResponse.status}): ${errText.slice(0, 50)}`);
+        }
 
         const reader = aiResponse.body.getReader();
         const decoder = new TextDecoder();
@@ -63,12 +71,21 @@ app.post('/api/process-v1', async (req, res) => {
         }
 
     } catch (error) {
-        console.error('[BRIDGE_ERR]', error.message);
-        res.write(`data: ${JSON.stringify({ choices: [{ delta: { content: "[ERROR] Bridge Stalled. Run the '.env command' in your terminal." } }] })}\n\n`);
+        console.error('[CRITICAL_ERR]', error.message);
+        
+        // HEURISTIC FALLBACK (Local Intelligence)
+        const lastMsg = messages[messages.length - 1].content.toLowerCase();
+        let heuristicReply = "My neural bridges are currently offline, but my local node is active. How can I assist you in emergency mode?";
+        if (lastMsg.includes('hi') || lastMsg.includes('hello')) heuristicReply = "Greetings. Connection is unstable, but the Nexus is operational.";
+        
+        const fallbackJSON = JSON.stringify({
+            choices: [{ delta: { content: `[LOCAL_NODE] ${heuristicReply}\n\n*Error Diagnostic: ${error.message}*` } }]
+        });
+        res.write(`data: ${fallbackJSON}\n\n`);
     } finally {
         res.write('data: [DONE]\n\n');
         res.end();
     }
 });
 
-app.listen(PORT, '0.0.0.0', () => console.log(`[SYS] Clean Core v21.19 ACTIVE on port ${PORT}`));
+app.listen(PORT, '0.0.0.0', () => console.log(`[SYS] Diagnostic Core v21.20 ACTIVE on port ${PORT}`));
