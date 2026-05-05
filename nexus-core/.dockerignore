@@ -1,0 +1,25 @@
+# Exclude local AI binaries
+ollama-dist/
+ollama.zip
+ollama.exe
+
+# Exclude local data and logs
+audit_trail.log
+agent_workspace/
+reports/
+
+# Exclude dependencies (will be installed in container)
+node_modules/
+__pycache__/
+*.pyc
+
+# Exclude local tools and git
+.git/
+.firebase/
+cloudflared.exe
+ZETA-*.bat
+ZETA-DEBUG.bat
+scratch/
+
+# Artifacts
+C:\Users\User\.gemini\antigravity\

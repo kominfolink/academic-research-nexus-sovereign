@@ -1,0 +1,36 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Local AI Binaries
+ollama-dist/
+ollama.zip
+ollama.exe
+ollama
+
+# Environment & Secrets
+.env
+.env.*
+.firebase/
+.firebaserc
+firebase.json
+
+# Logs & Temporary Files
+*.log
+audit_trail.log
+agent_workspace/
+reports/
+__pycache__/
+*.pyc
+
+# Local Tools
+cloudflared.exe
+ZETA-*.bat
+ZETA-DEBUG.bat
+scratch/
+optimize-zeta.ps1
+start_zeta*.bat
+
+# OS Files
+.DS_Store
+Thumbs.db

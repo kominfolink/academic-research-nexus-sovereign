@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus Intelligence v21.0</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Marked.js for professional markdown -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+        <button class="new-chat-btn" id="btn-new-chat">
+            <span>+</span> New session
+        </button>
+        <div class="sidebar-nav" id="recent-sessions">
+            <div class="budget-card">
+                <span class="label">SOVEREIGN BALANCE</span>
+                <span class="value" id="budget-value">$1000.00</span>
+                <div class="status-indicator">UNLIMITED ACTIVE</div>
+            </div>
+            <div class="sidebar-item active">Current Research</div>
+            <div class="sidebar-item" id="local-node-status">
+                <span class="status-dot"></span>
+                Local Node: <span id="node-health">DETECTING...</span>
+            </div>
+            <!-- Dynamic items will be added here -->
+        </div>
+        <div class="sidebar-footer">
+            <div class="sidebar-item" id="btn-settings"><span>⚙️</span> Settings</div>
+            <div class="sidebar-item" id="btn-root"><span>👤</span> Root Access</div>
+        </div>
+    </aside>
+
+    <!-- Modals -->
+    <div id="modal-settings" class="modal">
+        <canvas id="matrix-settings" style="position:absolute; top:0; left:0; width:100%; height:100%; z-index:-1; opacity:0.1;"></canvas>
+        <div class="modal-content glass-panel">
+            <h3>System Settings</h3>
+            <div class="setting-group">
+                <label for="api-key-input">API Key Rotation</label>
+                <input type="password" id="api-key-input" name="api_key" placeholder="sk-..." value="••••••••••••••••">
+            </div>
+            <button class="action-btn" aria-label="Save Settings" onclick="document.getElementById('modal-settings').style.display='none'">Save Configuration</button>
+            <button class="action-btn" id="btn-clear-history" style="background: var(--danger); margin-top: 10px;">Clear All History</button>
+        </div>
+    </div>
+
+    <div id="modal-root" class="modal">
+        <canvas id="matrix-root" style="position:absolute; top:0; left:0; width:100%; height:100%; z-index:-1; opacity:0.2;"></canvas>
+        <div class="modal-content glass-panel terminal">
+            <h3 id="terminal-label">Root Identity Terminal</h3>
+            <div id="terminal-output" class="terminal-body" role="log" aria-labelledby="terminal-label">> UNLOCK_NEXUS_CORE...<br>> IDENTITY_VERIFIED_AS_SOVEREIGN<br>> SYSTEM_STABLE</div>
+            <label for="terminal-input" style="display:none;">Terminal Command</label>
+            <input type="text" id="terminal-input" name="terminal_cmd" placeholder="Enter root command..." class="terminal-input" autocomplete="off">
+            <button class="action-btn" aria-label="Close Terminal" onclick="document.getElementById('modal-root').style.display='none'">Exit Terminal</button>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+        <header>
+            <div class="header-left">
+                <button id="btn-menu" class="action-btn" style="margin-right: 16px;">☰</button>
+                <div class="logo">✦ SOVEREIGN RESEARCH NEXUS <small>v21.5</small></div>
+            </div>
+            
+            <div class="status-bar">
+                <span id="bridge-status"><span class="pulse"></span> NEURAL_BRIDGE: ACTIVE</span>
+                <span id="latency-telemetry">LATENCY: 0ms</span>
+            </div>
+
+            <div class="controls-hub">
+                <select id="intensity-toggle" class="glass-select">
+                    <option value="low">Intensity: Low</option>
+                    <option value="medium">Intensity: Medium</option>
+                    <option value="high" selected>Intensity: High</option>
+                </select>
+                <select id="model-toggle" class="glass-select">
+                    <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
+                    <option value="llama-3.1">Llama 3.1 Sovereign</option>
+                    <option value="deepseek">DeepSeek Reasoner</option>
+                </select>
+                <select id="persona-toggle" class="glass-select">
+                    <option value="auditor">Auditor</option>
+                    <option value="analyst">Analyst</option>
+                    <option value="researcher">Researcher</option>
+                    <option value="nexus_oracle" selected>Nexus Oracle</option>
+                </select>
+            </div>
+        </header>
+
+        <div class="chat-window" id="chat-window">
+            <div class="message-container" id="chat-messages" role="log" aria-live="polite">
+                <div class="msg bot">
+                    <div class="avatar">✦</div>
+                    <div class="msg-content">
+                        <p>How can I help with your research today?</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="input-area">
+            <form class="input-container" id="chat-form">
+                <label for="image-upload" class="action-btn" aria-label="Upload File">📎</label>
+                <input type="file" id="image-upload" name="file_upload" accept="*" style="display: none;">
+                
+                <label for="chat-input" style="display:none;">Message Nexus</label>
+                <input type="text" id="chat-input" name="prompt" placeholder="Enter a prompt here" autocomplete="off">
+                
+                <button class="action-btn" id="btn-send" type="submit" aria-label="Send Message">➤</button>
+            </form>
+        </div>
+
+        <!-- REASONING PANE (HIDDEN BY DEFAULT) -->
+        <div id="neural-thought" style="display:none;"></div>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
