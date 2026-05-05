@@ -24,9 +24,9 @@ process.on('uncaughtException', (err) => {
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// [HEALTH-CHECK] Mandatory for Cloud/HF Stability
+// [HEALTH-CHECK & UI] Mandatory for Cloud/HF Stability
 app.get('/', (req, res) => {
-    res.status(200).send('<h1>Academic Research Nexus</h1><p>Status: ONLINE | Infrastructure: SOVEREIGN</p>');
+    res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 const upload = multer({ storage: multer.memoryStorage() });
