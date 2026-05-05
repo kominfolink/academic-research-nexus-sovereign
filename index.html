@@ -3,122 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZETA | ELITE CONTROL SYSTEM</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <title>Academic Research Nexus | Sovereign Intelligence</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Fira+Code&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="index.css">
 </head>
-<body>
-    <!-- SIDEBAR -->
-    <aside class="sidebar">
+<body class="zeta-realm">
+    <header class="dashboard-header">
         <div class="brand">
-            <div class="brand-icon">Z</div>
-            <div class="brand-name">ZETA ELITE</div>
+            <h1 style="margin:0; font-size: 1.5rem; color: var(--primary); letter-spacing: 2px;">ZETA ELITE</h1>
+            <span style="font-size: 0.8rem; opacity: 0.6; letter-spacing: 1px;">SOVEREIGN NEURAL INTERFACE</span>
         </div>
-        
-        <nav class="nav-group">
-            <a href="#" class="nav-item active">
-                <span>Dashboard</span>
-            </a>
-            <a href="#" class="nav-item">
-                <span>Offensive Vectors</span>
-            </a>
-            <a href="#" class="nav-item">
-                <span>Mesh Network</span>
-            </a>
-            <a href="#" class="nav-item">
-                <span>Lurv Assets</span>
-            </a>
-            <a href="#" class="nav-item">
-                <span>Captured Data</span>
-            </a>
-            <a href="#" class="nav-item" style="margin-top: auto; color: var(--accent);">
-                <span>Zeta Godmode</span>
-            </a>
-        </nav>
-    </aside>
+        <div class="status-badge">System Online</div>
+    </header>
 
-    <!-- MAIN CONTENT -->
-    <main class="main-content">
-        <header>
-            <div class="header-title">
-                <h2>Operational Dashboard</h2>
-                <p>Welcome back, Alpha. Systems are fully operational in the Zeta Realm.</p>
-            </div>
-            <div class="profile-area" style="display: flex; align-items: center; gap: 1rem;">
-                <div style="text-align: right;">
-                    <p style="font-weight: 700; font-size: 0.9rem;">Lead Programmer</p>
-                    <p style="font-size: 0.75rem; color: var(--text-muted);">Mossad Lead Ops</p>
-                </div>
-                <div style="width: 45px; height: 45px; border-radius: 50%; background: var(--bg-card); border: 2px solid var(--primary); display: grid; place-items: center; font-weight: 800;">A</div>
-            </div>
-        </header>
-
-        <!-- STATS GRID -->
-        <section class="dashboard-grid">
-            <div class="stat-card">
-                <span class="stat-label">AI Lure Success</span>
-                <div class="stat-value">84.2%</div>
-                <div class="stat-trend trend-up">↑ 12.5% vs last week</div>
-            </div>
-            <div class="stat-card">
-                <span class="stat-label">Data Units Captured</span>
-                <div class="stat-value">1,248</div>
-                <div class="stat-trend trend-up">↑ 230 new today</div>
-            </div>
-            <div class="stat-card">
-                <span class="stat-label">Mesh Nodes Alive</span>
-                <div class="stat-value">32</div>
-                <div style="font-size: 0.8rem; color: var(--success); font-weight: 600;">Optimal Connectivity</div>
-            </div>
-        </section>
-
-        <!-- CONTROL PANEL -->
-        <section class="cms-panel">
-            <div class="panel-header">
+    <main class="grid-container">
+        <section class="glass-panel">
+            <h2 style="color: var(--primary); margin-top: 0;">Operational Status</h2>
+            <p style="opacity: 0.8;">Welcome back, Alpha. Neural pathways established.</p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 2rem;">
                 <div>
-                    <h3 style="font-size: 1.2rem; margin-bottom: 4px;">Sovereign Security Audit</h3>
-                    <p style="font-size: 0.85rem; color: var(--text-muted);">Calibrate AI vectors for autonomous deployment.</p>
-                </div>
-                <div style="display: flex; gap: 1rem; align-items: center;">
-                    <div id="cloak-status" style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.75rem; color: var(--text-muted); background: rgba(0,0,0,0.3); padding: 4px 12px; border-radius: 20px; border: 1px solid var(--border);">
-                        <div style="width: 8px; height: 8px; border-radius: 50%; background: var(--success); box-shadow: 0 0 10px var(--success);"></div>
-                        CLOAK PROTOCOL: ACTIVE
-                    </div>
-                    <button class="btn-premium" id="btn-deploy">UNLEASH AGENT</button>
-                </div>
-            </div>
-            
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 2rem;">
-                <div>
-                    <label style="display: block; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 12px;">Intelligence Hub (Model Selection)</label>
-                    <select id="model-select" style="width: 100%; padding: 14px; border-radius: 12px; background: rgba(0,0,0,0.2); border: 1px solid var(--border); color: white; margin-bottom: 1.5rem; appearance: none; cursor: pointer;">
-                        <option value="mse-gpt-4o">MSE GPT-4o (Sovereign Local)</option>
-                        <option value="gemini-1.5-pro">Gemini 1.5 Pro (Neural Bridge)</option>
-                        <option value="openai/gpt-4o">OpenRouter GPT-4o (Standard)</option>
-                    </select>
-
-                    <label style="display: block; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 12px;">Target Persona Profile</label>
-                    <input type="text" id="target-profile" placeholder="Corporate Executive / IT Admin" style="width: 100%; padding: 14px; border-radius: 12px; background: rgba(0,0,0,0.2); border: 1px solid var(--border); color: white; margin-bottom: 1.5rem;">
-                    
-                    <label style="display: block; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 12px;">Aggression Matrix</label>
-                    <input type="range" min="1" max="100" value="75" style="width: 100%; accent-color: var(--primary);">
+                    <small style="text-transform: uppercase; font-size: 0.7rem; opacity: 0.5;">AI Lure Success</small>
+                    <div style="font-size: 1.8rem; font-weight: 700; color: var(--primary);">84.2%</div>
                 </div>
                 <div>
-                    <label style="display: block; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 12px;">Active Logs & Exfiltration</label>
-                    <div class="log-container" id="captured-log">
-                        <div class="log-entry">
-                            <span class="log-time">21:14:02</span>
-                            <span class="log-message">System handshake established.</span>
-                            <span class="log-status" style="background: rgba(16, 185, 129, 0.1); color: var(--success);">SUCCESS</span>
-                        </div>
-                    </div>
+                    <small style="text-transform: uppercase; font-size: 0.7rem; opacity: 0.5;">Data Captured</small>
+                    <div style="font-size: 1.8rem; font-weight: 700; color: var(--secondary);">1,248</div>
                 </div>
             </div>
         </section>
 
-        <footer style="text-align: center; color: var(--text-muted); font-size: 0.75rem; margin-top: 2rem;">
-            ZETA ELITE OPERATING SYSTEM V1.0 | DEUS EX SOPHIA BY ALPHA
-        </footer>
+        <section class="glass-panel">
+            <h2 style="color: var(--secondary); margin-top: 0;">Security Audit</h2>
+            <p style="opacity: 0.8;">Calibrate vectors for autonomous deployment.</p>
+            <div style="display: flex; flex-direction: column; gap: 1rem; margin-top: 1.5rem;">
+                <button id="cloakBtn" style="width: 100%;">CLOAK PROTOCOL: ACTIVE</button>
+                <button id="unleashBtn" style="width: 100%; background: transparent; border: 1px solid var(--primary); color: var(--primary);">UNLEASH AGENT</button>
+            </div>
+        </section>
+
+        <section class="glass-panel" style="grid-column: 1 / -1;">
+            <h2 style="font-size: 1.1rem; margin-top: 0; display: flex; align-items: center; gap: 0.5rem;">
+                <span style="width: 10px; height: 10px; background: #00ff00; border-radius: 50%; display: inline-block;"></span>
+                Neural Pulse Log
+            </h2>
+            <div class="log-container" id="logOutput">
+                <div style="margin-bottom: 0.5rem;">[21:14:02] System handshake established. <span style="color: var(--primary);">SUCCESS</span></div>
+                <div style="margin-bottom: 0.5rem;">[21:14:05] Sovereign encryption layer active.</div>
+                <div style="margin-bottom: 0.5rem;">[21:14:10] Connecting to global research nodes...</div>
+                <div style="color: var(--secondary);">[21:14:15] Accessing public datasets via Jina.ai...</div>
+            </div>
+        </section>
     </main>
 
     <script src="app.js"></script>
